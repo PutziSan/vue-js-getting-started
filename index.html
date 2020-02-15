@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:v-bind="http://www.w3.org/1999/xhtml"
+  xmlns:v-on="http://www.w3.org/1999/xhtml"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <style>
+      div {
+        margin-top: 5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      {{ message }}
+    </div>
+    <script>
+      var app = new Vue({
+        el: "#app",
+        data: {
+          message: "Hello Vue! risch gut. lol"
+        }
+      });
+      console.log("the data-props can be accessed directly:", app.message);
+      console.log(
+        "all data is available via $data:",
+        app.$data,
+        app.$data.message
+      );
+    </script>
+
+    <div id="app-2">
+      <p v-bind:title="message">
+        Hover your mouse over me for a few seconds to see my dynamically bound
+        title!
+      </p>
+      <!-- alternative (shorthand) syntax: -->
+      <!-- v-bind wird unterdrückt und nur `:` geschrieben:-->
+      <p :title="message">
+        bound title with shorthand syntax:
+      </p>
+    </div>
+    <script>
+      var app2 = new Vue({
+        el: "#app-2",
+        data: {
+          message: "You loaded this page on " + new Date().toLocaleString()
+        }
+      });
+    </script>
+
+    <div id="app-3">
+      <span v-if="seen">Now you see me</span>
+    </div>
+    <script>
+      var app3 = new Vue({
+        el: "#app-3",
+        data: {
+          seen: true
+        }
+      });
+    </script>
+
+    <div id="app-4">
+      <ol>
+        <li v-for="todo in todos">
+          {{ todo.text }}
+        </li>
+      </ol>
+      <button v-on:click="addToDo">add todo</button>
+    </div>
+    <script>
+      var app4 = new Vue({
+        el: "#app-4",
+        data: {
+          todos: [
+            { text: "Learn JavaScript" },
+            { text: "Learn Vue" },
+            { text: "Build something awesome" }
+          ]
+        },
+        methods: {
+          addToDo: function() {
+            this.todos.push({ text: "whatever" });
+          }
+        }
+      });
+    </script>
+
+    <div id="app-5">
+      <p>{{ message }}</p>
+      <button v-on:click="reverseMessage">Reverse Message</button>
+      <!-- alternative (shorthand) syntax: -->
+      <!-- v-on wird unterdrückt und nur `@` geschrieben:-->
+      <button @click="reverseMessage">Reverse Message with shorthand</button>
+      <button @click="inlineCall('oha!')">click with inlined caller:</button>
+    </div>
+    <script>
+      var app5 = new Vue({
+        el: "#app-5",
+        data: {
+          message: "Hello Vue.js!"
+        },
+        methods: {
+          reverseMessage: function() {
+            this.message = this.message
+              .split("")
+              .reverse()
+              .join("");
+          },
+          inlineCall: function(val) {
+            // val is `oha` from above:
+            this.message = val;
+          }
+        }
+      });
+    </script>
+
+    <div id="app-6">
+      <p>{{ message }}</p>
+      <input v-model="message" />
+      <button @click="logMessage">log message</button>
+    </div>
+    <script>
+      var app6 = new Vue({
+        el: "#app-6",
+        data: {
+          message: "Hello Vue!"
+        },
+        methods: {
+          logMessage: function() {
+            console.log("message is always in sync:", this.message);
+            console.log(
+              "it can also be accessed via the returned class instance:",
+              app6.message
+            );
+          }
+        }
+      });
+    </script>
+
+    <!-- the component model in vue:-->
+    <div id="app-7-prepare">
+      <ol>
+        <!-- Create an instance of the todo-item component -->
+        <todo-item></todo-item>
+      </ol>
+    </div>
+    <script>
+      // Define a new component called todo-item
+      Vue.component("todo-item", {
+        template: "<li>This is a todo</li>"
+      });
+      var app7Prepare = new Vue({ el: "#app-7-prepare" });
+    </script>
+
+    <!--component-model with dynamic data:-->
+    <div id="app-7">
+      <ol>
+        <!--
+          Now we provide each todo-item with the todo object
+          it's representing, so that its content can be dynamic.
+          We also need to provide each component with a "key",
+          which will be explained later.
+        -->
+        <todo-item
+          v-for="item in groceryList"
+          v-bind:todo="item"
+          v-bind:key="item.id"
+        ></todo-item>
+      </ol>
+    </div>
+    <script>
+      Vue.component("todo-item", {
+        // The todo-item component now accepts a
+        // "prop", which is like a custom attribute.
+        // This prop is called todo.
+        props: ["todo"],
+        template: "<li>{{ todo.text }}</li>"
+      });
+      var app7 = new Vue({
+        el: "#app-7",
+        data: {
+          groceryList: [
+            {
+              id: 0,
+              text: "Vegetables"
+            },
+            {
+              id: 1,
+              text: "Cheese"
+            },
+            {
+              id: 2,
+              text: "Whatever else humans are supposed to eat"
+            }
+          ]
+        }
+      });
+    </script>
+
+    <!-- using js inside vue-expressions:-->
+    <div id="app-8">
+      <p>{{ number + 1 }}</p>
+      <p>{{ ok ? 'YES' : 'NO' }}</p>
+      <p>{{ message.split('').reverse().join('') }}</p>
+      <!-- you can also use a function which is defined via `methods`:-->
+      <p>{{ reverseMessage() }}</p>
+    </div>
+    <script>
+      var app = new Vue({
+        el: "#app-8",
+        data: {
+          message: "Hello Vue!",
+          number: 42,
+          ok: false
+        },
+        methods: {
+          // a computed getter
+          reverseMessage: function() {
+            // `this` points to the vm instance
+            return this.message
+              .split("")
+              .reverse()
+              .join("");
+          }
+        }
+      });
+    </script>
+
+    <!-- using "computet properties"-->
+    <div id="app-9">
+      <p>Original message: "{{ message }}"</p>
+      <p>
+        Computed reversed message: "{{ reversedMessage }}", reversedMessage is
+        cached and will only re-evaluate, when message will change
+      </p>
+    </div>
+    <script>
+      var app = new Vue({
+        el: "#app-9",
+        data: {
+          message: "Hello Vue! risch gut. lol"
+        },
+        computed: {
+          // a computed getter
+          reversedMessage: function() {
+            // `this` points to the vm instance
+            return this.message
+              .split("")
+              .reverse()
+              .join("");
+          }
+        }
+      });
+      console.log(
+        "computed props can be accessed directly via the name:",
+        app.reversedMessage
+      );
+    </script>
+
+    <!-- computed props can also be define a setter -->
+    <!-- (find ich aber eher furchtbar und sollte vermieden werden) -->
+    <div id="app-10">
+      <p>
+        full name: {{ fullName }}, Vorname: {{ firstName }}, Nachname: {{
+        lastName }}
+      </p>
+      <label>firstName</label><input v-model="firstName" />
+      <label>lastName</label><input v-model="lastName" /> <label>fullName</label
+      ><input v-model="fullName" />
+    </div>
+    <script>
+      var app = new Vue({
+        el: "#app-10",
+        data: {
+          firstName: "John",
+          lastName: "Doe"
+        },
+        computed: {
+          // a computed getter + setter
+          fullName: {
+            get: function() {
+              return this.firstName + " " + this.lastName;
+            },
+            set: function(newValue) {
+              var names = newValue.split(" ");
+              this.firstName = names[0];
+              this.lastName = names[names.length - 1];
+            }
+          }
+        }
+      });
+    </script>
+
+    <!-- you can use lifecycle-functions, um methoden erst zu erstellen, wenn die instanz bereits erstellt wurde o.ä. -->
+    <!-- check lifecycle-diagram für mehr infos: https://vuejs.org/v2/guide/instance.html#Lifecycle-Diagram -->
+    <script>
+      new Vue({
+        data: { a: 1 },
+        // the created hook can be used to run code after an instance is created:
+        created: function() {
+          // `this` points to the vm instance
+          console.log("a is: " + this.a);
+        }
+      });
+    </script>
+
+    <!-- watchers for reacting on data-changes (zb sinnvoll, für asynchrone oder heavy operations) -->
+    <div id="watch-example">
+      <p>
+        Ask a yes/no question:
+        <input v-model="question" />
+      </p>
+      <p>{{ answer }}</p>
+    </div>
+    <script>
+      function pause(ms) {
+        return new Promise(r => setTimeout(r, ms));
+      }
+
+      var watchExampleVM = new Vue({
+        el: "#watch-example",
+        data: {
+          question: "",
+          answer: "I cannot give you an answer until you ask a question!"
+        },
+        created: function() {
+          // global counter, um zu überprüfen ob die funktion zuletzt aufgerufen wurde:
+          let t = 0;
+          this.debouncedGetAnswer = async () => {
+            this.answer = "Waiting for you to stop typing...";
+            t++;
+            const time = t;
+            await pause(500);
+            // überprüfe, ob es erneut aufgerufen wurde:
+            if (time !== t) {
+              return;
+            }
+            this.answer = "Thinking...";
+            const resp = await fetch("https://yesno.wtf/api");
+            const res = await resp.json();
+            // überprüfe, ob es erneut aufgerufen wurde (#race-condition)
+            if (time !== t) {
+              return;
+            }
+            this.answer = res.answer;
+          };
+        },
+        watch: {
+          // whenever question changes, this function will run
+          question: function(newQuestionValue, oldQuestionValue) {
+            this.answer = "Waiting for you to stop typing...";
+            this.debouncedGetAnswer().catch(console.error);
+          }
+        }
+      });
+      // In addition to the watch option, you can also use the imperative vm.$watch API.
+    </script>
+
+    <!-- working with class-names (object-syntax): -->
+    <style>
+      .static {
+        color: white;
+        background-color: rebeccapurple;
+      }
+
+      .active {
+        background-color: lightblue;
+      }
+
+      .text-danger {
+        color: red;
+      }
+    </style>
+    <div id="class-name-example">
+      <span
+        class="static"
+        :class="{ active: isActive, 'text-danger': hasError  }"
+      >
+        check the classes:
+      </span>
+      <button @click="toggle('isActive')">toggle class</button>
+      <button @click="toggle('hasError')">toggle error</button>
+      <span :class="objectInData">
+        demo for not inlined class:
+      </span>
+      <span :class="computedObject">demo for computed class object</span>
+    </div>
+    <script>
+      new Vue({
+        el: "#class-name-example",
+        data: {
+          isActive: true,
+          hasError: false,
+          // muss statisch sein, für dynamische values dann computed nutzen:
+          objectInData: { active: true, "text-danger": true }
+        },
+        computed: {
+          computedObject: function() {
+            return {
+              active: this.isActive,
+              "text-danger": this.hasError
+            };
+          }
+        },
+        methods: {
+          toggle(propName) {
+            this[propName] = !this[propName];
+          }
+        }
+      });
+    </script>
+
+    <!-- working with class-names (array-syntax): -->
+    <div id="class-name-array-example">
+      <span :class="[activeClass, errorClass]">
+        es wird die werte der data-variablen als string lesen und concatten
+        ergebnis: "{{ activeClass }} {{ errorClass }}"
+      </span>
+      <br />
+      <!--      demo with inlined js:-->
+      <span :class="[isActive ? activeClass : '', errorClass]">
+        array-class-demo with inlined js
+      </span>
+      <br>
+      <span v-bind:class="[{ active: isActive }, errorClass]">
+        array-class-name with inlind object-syntax
+      </span>
+      <button @click="toggle('isActive')">toggle class</button>
+    </div>
+    <script>
+      new Vue({
+        el: "#class-name-array-example",
+        data: {
+          activeClass: "active",
+          errorClass: "text-danger",
+          isActive: false
+        },
+        methods: {
+          toggle(propName) {
+            this[propName] = !this[propName];
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
