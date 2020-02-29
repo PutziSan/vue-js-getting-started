@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel -->
 <html
   lang="en"
   xmlns:v-bind="http://www.w3.org/1999/xhtml"
@@ -10,15 +11,15 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     <style>
-      div {
+      section {
         margin-top: 5rem;
       }
     </style>
   </head>
-  <body>
-    <div id="app">
+  <body class="px-4">
+    <section id="app">
       {{ message }}
-    </div>
+    </section>
     <script>
       var app = new Vue({
         el: "#app",
@@ -34,7 +35,7 @@
       );
     </script>
 
-    <div id="app-2">
+    <section id="app-2">
       <p v-bind:title="message">
         Hover your mouse over me for a few seconds to see my dynamically bound
         title!
@@ -44,7 +45,7 @@
       <p :title="message">
         bound title with shorthand syntax:
       </p>
-    </div>
+    </section>
     <script>
       var app2 = new Vue({
         el: "#app-2",
@@ -54,9 +55,9 @@
       });
     </script>
 
-    <div id="app-3">
+    <section id="app-3">
       <span v-if="seen">Now you see me</span>
-    </div>
+    </section>
     <script>
       var app3 = new Vue({
         el: "#app-3",
@@ -66,14 +67,14 @@
       });
     </script>
 
-    <div id="app-4">
+    <section id="app-4">
       <ol>
         <li v-for="todo in todos">
           {{ todo.text }}
         </li>
       </ol>
       <button v-on:click="addToDo">add todo</button>
-    </div>
+    </section>
     <script>
       var app4 = new Vue({
         el: "#app-4",
@@ -92,14 +93,14 @@
       });
     </script>
 
-    <div id="app-5">
+    <section id="app-5">
       <p>{{ message }}</p>
       <button v-on:click="reverseMessage">Reverse Message</button>
       <!-- alternative (shorthand) syntax: -->
       <!-- v-on wird unterdrückt und nur `@` geschrieben:-->
       <button @click="reverseMessage">Reverse Message with shorthand</button>
       <button @click="inlineCall('oha!')">click with inlined caller:</button>
-    </div>
+    </section>
     <script>
       var app5 = new Vue({
         el: "#app-5",
@@ -121,16 +122,19 @@
       });
     </script>
 
-    <div id="app-6">
+    <section id="app-6">
       <p>{{ message }}</p>
       <input v-model="message" />
+      <!--  this is the same this as:    -->
+      <input :value="searchText" @input="searchText = $event.target.value" />
       <button @click="logMessage">log message</button>
-    </div>
+    </section>
     <script>
       var app6 = new Vue({
         el: "#app-6",
         data: {
-          message: "Hello Vue!"
+          message: "Hello Vue!",
+          searchText: "hihihi!"
         },
         methods: {
           logMessage: function() {
@@ -145,12 +149,12 @@
     </script>
 
     <!-- the component model in vue:-->
-    <div id="app-7-prepare">
+    <section id="app-7-prepare">
       <ol>
         <!-- Create an instance of the todo-item component -->
         <todo-item></todo-item>
       </ol>
-    </div>
+    </section>
     <script>
       // Define a new component called todo-item
       Vue.component("todo-item", {
@@ -160,7 +164,7 @@
     </script>
 
     <!--component-model with dynamic data:-->
-    <div id="app-7">
+    <section id="app-7">
       <ol>
         <!--
           Now we provide each todo-item with the todo object
@@ -174,7 +178,7 @@
           v-bind:key="item.id"
         ></todo-item>
       </ol>
-    </div>
+    </section>
     <script>
       Vue.component("todo-item", {
         // The todo-item component now accepts a
@@ -205,13 +209,13 @@
     </script>
 
     <!-- using js inside vue-expressions:-->
-    <div id="app-8">
+    <section id="app-8">
       <p>{{ number + 1 }}</p>
       <p>{{ ok ? 'YES' : 'NO' }}</p>
       <p>{{ message.split('').reverse().join('') }}</p>
       <!-- you can also use a function which is defined via `methods`:-->
       <p>{{ reverseMessage() }}</p>
-    </div>
+    </section>
     <script>
       var app = new Vue({
         el: "#app-8",
@@ -234,13 +238,13 @@
     </script>
 
     <!-- using "computet properties"-->
-    <div id="app-9">
+    <section id="app-9">
       <p>Original message: "{{ message }}"</p>
       <p>
         Computed reversed message: "{{ reversedMessage }}", reversedMessage is
         cached and will only re-evaluate, when message will change
       </p>
-    </div>
+    </section>
     <script>
       var app = new Vue({
         el: "#app-9",
@@ -248,6 +252,7 @@
           message: "Hello Vue! risch gut. lol"
         },
         computed: {
+          // quasi wie useMemo
           // a computed getter
           reversedMessage: function() {
             // `this` points to the vm instance
@@ -264,9 +269,9 @@
       );
     </script>
 
-    <!-- computed props can also be define a setter -->
+    <!-- computed props can also define a setter -->
     <!-- (find ich aber eher furchtbar und sollte vermieden werden) -->
-    <div id="app-10">
+    <section id="app-10">
       <p>
         full name: {{ fullName }}, Vorname: {{ firstName }}, Nachname: {{
         lastName }}
@@ -274,7 +279,7 @@
       <label>firstName</label><input v-model="firstName" />
       <label>lastName</label><input v-model="lastName" /> <label>fullName</label
       ><input v-model="fullName" />
-    </div>
+    </section>
     <script>
       var app = new Vue({
         el: "#app-10",
@@ -312,13 +317,13 @@
     </script>
 
     <!-- watchers for reacting on data-changes (zb sinnvoll, für asynchrone oder heavy operations) -->
-    <div id="watch-example">
+    <section id="watch-example">
       <p>
         Ask a yes/no question:
         <input v-model="question" />
       </p>
       <p>{{ answer }}</p>
-    </div>
+    </section>
     <script>
       function pause(ms) {
         return new Promise(r => setTimeout(r, ms));
@@ -378,20 +383,21 @@
         color: red;
       }
     </style>
-    <div id="class-name-example">
+    <section id="class-name-example">
       <span
         class="static"
         :class="{ active: isActive, 'text-danger': hasError  }"
       >
         check the classes:
       </span>
+      <!-- inline function call (toggle-function defined in methods) -->
       <button @click="toggle('isActive')">toggle class</button>
       <button @click="toggle('hasError')">toggle error</button>
       <span :class="objectInData">
         demo for not inlined class:
       </span>
       <span :class="computedObject">demo for computed class object</span>
-    </div>
+    </section>
     <script>
       new Vue({
         el: "#class-name-example",
@@ -418,7 +424,7 @@
     </script>
 
     <!-- working with class-names (array-syntax): -->
-    <div id="class-name-array-example">
+    <section id="class-name-array-example">
       <span :class="[activeClass, errorClass]">
         es wird die werte der data-variablen als string lesen und concatten
         ergebnis: "{{ activeClass }} {{ errorClass }}"
@@ -428,12 +434,12 @@
       <span :class="[isActive ? activeClass : '', errorClass]">
         array-class-demo with inlined js
       </span>
-      <br>
+      <br />
       <span v-bind:class="[{ active: isActive }, errorClass]">
         array-class-name with inlind object-syntax
       </span>
       <button @click="toggle('isActive')">toggle class</button>
-    </div>
+    </section>
     <script>
       new Vue({
         el: "#class-name-array-example",
@@ -449,5 +455,324 @@
         }
       });
     </script>
+
+    <!--  vuejs conditionals: https://vuejs.org/v2/guide/conditional.html -->
+    <section id="vue-conditionals-example-app">
+      <h1 v-if="isAwesome">Vue is awesome!</h1>
+      <h1 v-else-if="isREALLYAwesome">It is REALLY Awesome!</h1>
+      <h1 v-else>Oh no :(</h1>
+      <button @click="toggle('isAwesome')">toggle isAwesome</button>
+      <button @click="toggle('isREALLYAwesome')">toggle isREALLYAwesome</button>
+
+      <!-- conditionals for multiple elements: -->
+      <div v-if="isAwesome">
+        <a href="#">my-ele</a>
+        <span> with div</span>
+      </div>
+      <!-- conditional with "template" (in react: "fragment" ): -->
+      <template v-if="isAwesome">
+        <a href="#">my-ele</a>
+        <span> with no div</span>
+      </template>
+
+      <div>
+        <!-- on toggle the inut-value will stay the same, because by default vue uses type and index of elements -->
+        <p>conditionals without keys for reusing element:</p>
+        <template v-if="isAwesome">
+          <label for="username-input">Username</label>
+          <input placeholder="Enter your username" id="username-input" />
+        </template>
+        <template v-else>
+          <label for="email-input">Email</label>
+          <input placeholder="Enter your email address" id="email-input" />
+        </template>
+      </div>
+      <div>
+        <!-- on toggle the values will be erased because of the different keys: -->
+        <p>conditionals without keys for reusing element:</p>
+        <template v-if="isAwesome">
+          <label for="username-input-keyed">Username</label>
+          <input
+            placeholder="Enter your username"
+            id="username-input-keyed"
+            key="username-input-keyed"
+          />
+        </template>
+        <template v-else>
+          <label for="email-input-keyed">Email</label>
+          <input
+            placeholder="Enter your email address"
+            id="email-input-keyed"
+            key="email-input-keyed"
+          />
+        </template>
+      </div>
+
+      <p>
+        displaying an element with v-show, which will just change the
+        display-property to `none`:
+      </p>
+      <p v-show="isAwesome">
+        this remains in the dom when not visible, because hidden via display
+        none
+      </p>
+      <!-- v-else and tempalte is not supported for this! -->
+    </section>
+    <script>
+      new Vue({
+        el: "#vue-conditionals-example-app",
+        data: {
+          isAwesome: true,
+          isREALLYAwesome: true
+        },
+        methods: {
+          toggle(propName) {
+            this[propName] = !this[propName];
+          }
+        }
+      });
+    </script>
   </body>
+
+  <!--Using v-if and v-for together is not recommended. See the style guide for further information:
+    https://vuejs.org/v2/style-guide/#Avoid-v-if-with-v-for-essential  -->
+  <!--When used together with v-if, v-for has a higher priority than v-if. See the list rendering guide for details:
+    https://vuejs.org/v2/guide/list.html#v-for-with-v-if -->
+
+  <!--  https://vuejs.org/v2/guide/list.html -->
+  <h2>using v-for:</h2>
+  <section id="example-v-for-1">
+    <ul>
+      <li v-for="item in items" :key="item.message">
+        {{ item.message }}
+      </li>
+      <!-- using index: -->
+      <li
+        v-for="(item, index) in items"
+        :key="'computed-key-example-' + item.message"
+      >
+        {{ index }} - {{ item.message }}
+      </li>
+    </ul>
+    <ul>
+      <li v-for="value in book" :key="'first-' + value">{{value}}</li>
+      <!-- using key -->
+      <li v-for="(value, key) in book" :key="'sec-' + value">
+        {{key}}: {{value}}
+      </li>
+    </ul>
+    <!-- use v-for with a range: -->
+    <ul>
+      <!-- will render 1,2,3,4 -->
+      <li v-for="n in 4">{{n}}</li>
+    </ul>
+  </section>
+  <script>
+    new Vue({
+      el: "#example-v-for-1",
+      data: {
+        items: [{ message: "socks" }, { message: "whatever" }],
+        book: {
+          title: "Per Anhalter",
+          author: "fajessen"
+        }
+      }
+    });
+  </script>
+
+  <!-- v-for with components wie normal, props müssen reingegeben werden: -->
+  <!-- https://vuejs.org/v2/guide/list.html#v-for-with-a-Component -->
+  <section id="vue-for-with-component">
+    <my-book
+      v-for="(todo, index) in books"
+      :key="todo.id"
+      :title="todo.title"
+    ></my-book>
+
+    <!-- example with is-attribute: -->
+    <ul>
+      <!-- Note the is="my-book" attribute. This is necessary in DOM templates, because only an <li> element is valid inside a <ul>. It does the same thing as <todo-item>, but works around a potential browser parsing error. See DOM Template Parsing Caveats to learn more. -->
+      <li
+        is="my-book"
+        v-for="(todo, index) in books"
+        :key="todo.id"
+        :title="todo.title"
+      ></li>
+    </ul>
+  </section>
+  <script>
+    Vue.component("my-book", {
+      template: `
+    <li>
+      {{ title }}
+    </li>`,
+      props: ["title"]
+    });
+    new Vue({
+      el: "#vue-for-with-component",
+      data: { books: [{ title: "anhalter" }, { title: "Sun Tsu" }] }
+    });
+  </script>
+
+  <!-- vue-events https://vuejs.org/v2/guide/events.html -->
+  <!-- accessing native event in event handerls: -->
+  <section id="vue-native-events-example">
+    <label for="vue-onchange-example"
+      >native on change example, this will log on lose focus</label
+    >
+    <!-- this is native onchange, not like react, this will only log when losing focus! -->
+    <input
+      id="vue-onchange-example"
+      type="text"
+      @change="logNewValue($event)"
+    />
+  </section>
+  <script>
+    new Vue({
+      el: "#vue-native-events-example",
+      methods: {
+        logNewValue($event) {
+          console.log($event.target.value);
+        }
+      }
+    });
+  </script>
+
+  <!-- https://vuejs.org/v2/guide/events.html#Event-Modifiers
+event modifiers to call an event with event.prevetDefault and/or event.stopPropagation:
+ .stop, .prevent, .capture, .self, .once, .passive  -->
+  <section id="vue-event-modifiers-example">
+    <!-- the click event's propagation will be stopped -->
+    <a href="https://google.com" v-on:click.stop="console.log('click.stop')"
+      >stop propagation link</a
+    >
+
+    <!-- the submit event will no longer reload the page -->
+    <form v-on:submit.prevent="console.log('submit.prevent')">
+      <button type="submit">
+        form submit will do nothing cause prevented!
+      </button>
+    </form>
+
+    <!-- modifiers can be chained -->
+    <a
+      href="https://google.com"
+      v-on:click.stop.prevent="console.log('click.stop.prevent')"
+      >link with prevent default and stop progation</a
+    >
+
+    <!-- just the modifier -->
+    <form v-on:submit.prevent>
+      <button type="submit">
+        form submit will do nothing cause prevented! (only with modifier)
+      </button>
+    </form>
+
+    <!-- use capture mode when adding the event listener -->
+    <!-- i.e. an event targeting an inner element is handled here before being handled by that element -->
+    <div v-on:click.capture="console.log('click.capture')">...</div>
+
+    <!-- only trigger handler if event.target is the element itself -->
+    <!-- i.e. not from a child element -->
+    <div v-on:click.self="console.log('click.self')">...</div>
+
+    <a v-on:click.once="console.log('doThis')"
+      >the click event will be triggered at most once</a
+    >
+  </section>
+
+  <!--  https://vuejs.org/v2/guide/forms.html -->
+  <section id="form-input-model-bindings">
+    <input v-model="message" placeholder="edit me" />
+    <p>Message is: {{ message }}</p>
+    <!--  v-model kann an ein array gebunden werden um eine liste zu erstellen  -->
+    <input type="checkbox" id="jack" value="Jack" v-model="checkedNames" />
+    <label for="jack">Jack</label>
+    <input type="checkbox" id="john" value="John" v-model="checkedNames" />
+    <label for="john">John</label>
+    <input type="checkbox" id="mike" value="Mike" v-model="checkedNames" />
+    <label for="mike">Mike</label>
+    <br />
+    <span>Checked names: {{ checkedNames }}</span>
+    <br />
+    <!--  radio button mit v-model:  -->
+    <input type="radio" id="one" value="One" v-model="picked" />
+    <label for="one">One</label>
+    <br />
+    <input type="radio" id="two" value="Two" v-model="picked" />
+    <label for="two">Two</label>
+    <br />
+    <span>Picked: {{ picked }}</span>
+    <!--  select with v-model:  -->
+    <select v-model="selected">
+      <option disabled value="">Please select one</option>
+      <option>A</option>
+      <option>B</option>
+      <option>C</option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+    <!-- If the initial value of your v-model expression does not match any of the options,
+      the <select> element will render in an “unselected” state.
+      On iOS, this will prevent the user from being able to select the first item,
+       because iOS does not fire a change event in this case.
+       It is therefore recommended to provide a disabled option with an empty value,
+       as demonstrated in the example above. -->
+  </section>
+  <script>
+    new Vue({
+      el: "#form-input-model-bindings",
+      data: {
+        message: "",
+        // wird dynamisch gefüllt mit der id:
+        checkedNames: [],
+        picked: undefined,
+        // selected should start with empty value and use an disabled first option with empty value (see html above)
+        selected: ""
+      }
+    });
+  </script>
+
+  <!-- vue components basics -->
+  <section id="simple-component-example">
+    <button-counter></button-counter>
+    <button-counter>from parent</button-counter>
+    <!--  using custom events:  -->
+    <p>with custom event:</p>
+    <!--  custom event always need to be lowercase!  -->
+    <button-counter @button-click="logSomething('clicked the button!')">
+      other stuff!
+    </button-counter>
+  </section>
+  <script>
+    Vue.component("button-counter", {
+      // a component’s data option must be a function,
+      // so that each instance can maintain an independent copy of the returned data object:
+      data: function() {
+        return {
+          count: 0
+        };
+      },
+      // the emit-method can be used to pass an event for the parent,
+      // the parent can now use this new created "onButtonClick" event:
+      template: `<button v-on:click="count++; $emit('button-click')">You clicked me {{ count }} times.
+this will use the dynamic content from the parent via the slot-component:<slot></slot></button>`
+    });
+    new Vue({
+      el: "#simple-component-example",
+      methods: {
+        logSomething(val) {
+          console.log(val);
+        }
+      }
+    });
+  </script>
+
+  <!-- use v-model with components is not possible, instead use custom syntax with v-bind:vale and @input
+https://vuejs.org/v2/guide/components.html#Using-v-model-on-Components => then again v-modekl alsow orks with custom components -->
+
+  <!--  NEXT: component registration: https://vuejs.org/v2/guide/components-registration.html -->
+
+  <section>
+    end
+  </section>
 </html>
